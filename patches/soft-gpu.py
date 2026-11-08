@@ -103,7 +103,7 @@ for mfb in list(up.rglob('MiniIOMobileFramebuffer.cpp')):
     t = mfb.read_text()
     if 'HakiosGPUStart' in t:
         continue
-    anchor = 'IOMobileFramebuffer::start(IOService * provider)\n{'
+    anchor = 'bool\nIOMobileFramebuffer::start(IOService * provider)\n{'
     if anchor not in t:
         print('missing anchor in', mfb)
         continue
