@@ -30,4 +30,6 @@ for f in hakios-kernel prebuilt/hakios-kernel xnu-src/xnu-8796.121.2/BUILD/obj/D
          xnu-src/xnu-8796.121.2/BUILD/obj/DEVELOPMENT_ARM64_BCM2837/mach.development.bcm2837; do
   [ -e "$f" ] && ls -l "$f"
 done
+echo "=== xnu-deps logs ==="
+for f in xnu-deps/*.log; do [ -e "$f" ] && { echo "##### $f"; tail -60 "$f"; }; done
 echo BUILD_DONE
