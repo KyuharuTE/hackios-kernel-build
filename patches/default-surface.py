@@ -13,7 +13,7 @@ old = '''\t\tif (sid == 0) {
 \t\t\t/* the bottom layer taken away: nothing is shown, the screen is black */'''
 new = '''\t\tif (sid == 0 && layer == 0) {
 \t\t\t/* nothing named: the surface backboardd asked for, if it drew into it */
-\t\t\tMiniIOSurface * fallback = fOwner->defaultSurface();
+\t\t\tMiniIOSurface * fallback = defaultSurface();
 
 \t\t\tif (fallback != NULL) {
 \t\t\t\tint32_t all[4];
@@ -23,7 +23,7 @@ new = '''\t\tif (sid == 0 && layer == 0) {
 				if (++shown <= 3) {
 \t\t\t\t\tIOLog("MiniIOMobileFramebuffer: swap %u: no surface; showing the default one\\n", fSwapsShown + 1);
 \t\t\t\t}
-\t\t\t\tfOwner->drawLayer(fallback, all, all);
+\t\t\t\tdrawLayer(fallback, all, all);
 \t\t\t\tcontinue;
 \t\t\t}
 \t\t}
