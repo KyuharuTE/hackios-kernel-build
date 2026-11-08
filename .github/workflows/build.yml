@@ -38,6 +38,18 @@ jobs:
       - name: Build the kernel
         run: ./build.sh 2>&1 | tee build.log
 
+      - name: Build libredwood.dylib (CA ignore forced off)
+        run: |
+          cd upstream
+          python3 ../patches/ca-ignore.py .
+          export THEOS=$HOME/theos
+          export PATH="$PWD/xnu-deps/host/bin:$PATH"
+          DYN="xnu-clang -arch arm64 -isysroot $THEOS/sdks/iPhoneOS16.5.sdk -O1"
+          mkdir -p ../out
+          $DYN -dynamiclib -install_name /redwood/lib/libredwood.dylib \
+            -framework CoreFoundation -framework IOKit -lobjc \
+            -o ../out/libredwood.dylib userland/src/inject.c && ls -l ../out/libredwood.dylib
+
       - name: Collect artifacts
         if: always()
         run: |
