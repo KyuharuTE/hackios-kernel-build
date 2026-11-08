@@ -42,9 +42,9 @@ jobs:
         if: always()
         run: |
           mkdir -p out
-          find /workspaces upstream /root /home/runner -name 'hakios-kernel' -o -name 'mach.development.bcm2837' 2>/dev/null | head -20
-          for f in $(find /workspaces upstream -name 'hakios-kernel' -o -name 'mach.development.bcm2837' 2>/dev/null); do cp -v "$f" out/ ; done
-          ls -l out build.log
+          cp -v upstream/built/* out/ 2>/dev/null || true
+          [ -s build.log ] && cp build.log out/ || true
+          ls -l out
 
       - uses: actions/upload-artifact@v4
         if: always()
