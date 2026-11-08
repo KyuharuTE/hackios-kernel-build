@@ -17,7 +17,7 @@ jobs:
           sudo apt-get install -y --no-install-recommends \
             build-essential cmake ninja-build libssl-dev liblzma-dev zlib1g-dev \
             xz-utils curl ca-certificates python3 python3-pip \
-            bsdextrautils dos2unix unzip jq file flex bison m4 autoconf automake libtool
+            bsdextrautils dos2unix unzip jq file flex bison m4 autoconf automake libtool uuid-dev libarchive-dev libxml2-dev libbz2-dev gperf texinfo gettext wget netpbm
           nproc; free -g | head -2; df -h /
 
       - name: Install theos (Linux cctools + SDK)
