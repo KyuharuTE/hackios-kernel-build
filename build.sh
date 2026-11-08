@@ -15,6 +15,7 @@ git checkout main || true
 git log -1 --format='%H %ci %s'
 python3 "$HERE/patches/soft-gpu.py" "$UP" || true
 python3 "$HERE/patches/swap-dump.py" "$UP" || true
+python3 "$HERE/patches/fb-log.py" "$UP" || true
 
 ls -l prebuilt/ 2>/dev/null | head
 
