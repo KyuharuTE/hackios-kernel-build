@@ -50,22 +50,22 @@ jobs:
             -framework CoreFoundation -framework IOKit -lobjc \
             -o ../out/libredwood.dylib userland/src/inject.c && ls -l ../out/libredwood.dylib
 
-      - name: Build Mesa + libredwood-gl.dylib (Apple GPU names)
+      - name: Build libredwood-gl.dylib (Apple GPU names)
         run: |
           cd upstream
           python3 ../patches/fake-renderer.py .
-          pip3 install --quiet mako 2>/dev/null || true
+          python3 ../patches/osmesa-exports.py ../libs/libOSMesa.8.dylib > /tmp/exported-gl.txt
+          wc -l /tmp/exported-gl.txt
+          python3 userland/mkeagl.py userland/src/eagl_slots.txt ../libs/gl.xml \
+            /tmp/exported-gl.txt userland/src/eagl.c > /tmp/eagl_gen.h
+          wc -l /tmp/eagl_gen.h
           export THEOS=$HOME/theos
           export PATH="$PWD/xnu-deps/host/bin:$PATH"
-          ( cd userland && ../tools/mk-mesa.sh ) 2>&1 | tail -40
-          M=$PWD/xnu-deps/build/mesa/out
-          ls -l $M/libOSMesa.8.dylib $M/gl.xml $M/exported-gl.txt
-          ( cd userland && ./mkeagl.py src/eagl_slots.txt $M/gl.xml $M/exported-gl.txt src/eagl.c > $M/eagl_gen.h )
           DYN="xnu-clang -arch arm64 -isysroot $THEOS/sdks/iPhoneOS16.5.sdk -O1"
           mkdir -p ../out
-          $DYN -dynamiclib -install_name /redwood/lib/libredwood-gl.dylib -I$M \
+          $DYN -dynamiclib -install_name /redwood/lib/libredwood-gl.dylib -I/tmp \
             -framework CoreFoundation -framework IOKit -framework IOSurface -lobjc \
-            $M/libOSMesa.8.dylib -o ../out/libredwood-gl.dylib \
+            ../libs/libOSMesa.8.dylib -o ../out/libredwood-gl.dylib \
             userland/src/eagl.c userland/src/gl_osmesa.c && ls -l ../out/libredwood-gl.dylib
 
       - name: Collect artifacts
