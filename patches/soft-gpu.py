@@ -107,7 +107,7 @@ for mfb in list(up.rglob('MiniIOMobileFramebuffer.cpp')):
     if anchor not in t:
         print('missing anchor in', mfb)
         continue
-    add = anchor + '''\n\t/* no Adreno on this board (QEMU): the service is registered anyway, for a software renderer */\n\t{\n\t\textern "C" void HakiosGPUStart(void);\n\t\tstatic bool started;\n\n\t\tif (!started) {\n\t\t\tstarted = true;\n\t\t\tHakiosGPUStart();\n\t\t}\n\t}'''
+    add = anchor + '''\n\t/* no Adreno on this board (QEMU): the service is registered anyway, for a software renderer */\n\t{\n\t\tvoid HakiosGPUStart(void);\n\t\tstatic bool started;\n\n\t\tif (!started) {\n\t\t\tstarted = true;\n\t\t\tHakiosGPUStart();\n\t\t}\n\t}'''
     t = t.replace(anchor, add, 1)
     mfb.write_text(t)
     n += 1
