@@ -3,7 +3,7 @@
 set -uo pipefail
 set -x
 
-UP=${UP:-/workspaces/upstream}
+UP=${UP:-$PWD/upstream}
 if [ ! -d "$UP/.git" ]; then
   git clone --filter=blob:none https://github.com/oosexgang/hakios-xnu-kernel.git "$UP"
 fi
