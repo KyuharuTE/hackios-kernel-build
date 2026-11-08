@@ -96,3 +96,20 @@ if 'for software clients' not in a:
 gpu.write_text(g)
 adr.write_text(a)
 print('soft-gpu patch: %d edit(s)' % n)
+
+# 4. The display driver's start() always runs: start the GPU service from there, so that it
+#    exists even with no Adreno behind it.
+for mfb in list(up.rglob('MiniIOMobileFramebuffer.cpp')):
+    t = mfb.read_text()
+    if 'HakiosGPUStart' in t:
+        continue
+    anchor = '\tsetProperty("HakiosWaitsForGPU", kOSBooleanTrue);'
+    if anchor not in t:
+        print('missing anchor in', mfb)
+        continue
+    add = anchor + '''\n\t/* no Adreno on this board (QEMU): the service is registered anyway, for a software renderer */\n\t{\n\t\textern "C" void HakiosGPUStart(void);\n\t\tstatic bool started;\n\n\t\tif (!started) {\n\t\t\tstarted = true;\n\t\t\tHakiosGPUStart();\n\t\t}\n\t}'''
+    t = t.replace(anchor, add, 1)
+    mfb.write_text(t)
+    n += 1
+    print('patched', mfb)
+print('soft-gpu patch: %d edit(s) total' % n)
