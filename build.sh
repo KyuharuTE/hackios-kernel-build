@@ -3,6 +3,7 @@
 set -uo pipefail
 set -x
 
+HERE=$(cd "$(dirname "$0")" && pwd)
 UP=${UP:-$PWD/upstream}
 if [ ! -d "$UP/.git" ]; then
   git clone --filter=blob:none https://github.com/oosexgang/hakios-xnu-kernel.git "$UP"
@@ -12,6 +13,7 @@ git sparse-checkout disable || true
 git fetch --all --tags || true
 git checkout main || true
 git log -1 --format='%H %ci %s'
+python3 "$HERE/patches/soft-gpu.py" "$UP" || true
 
 ls -l prebuilt/ 2>/dev/null | head
 
