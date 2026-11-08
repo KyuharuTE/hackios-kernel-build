@@ -26,7 +26,8 @@ export PATH="$PWD/xnu-deps/host/bin:$PATH"
 
 export BUILD_DSYM=0
 export BUILD_LTO=0
-time make kernel BUILD_DSYM=0 -j"$(nproc)" 2>&1 | tail -300
+time make kernel BUILD_DSYM=0 -j"$(nproc)" > "$HERE/full-build.log" 2>&1
+tail -60 "$HERE/full-build.log"
 SUF=$?
 sync
 echo "== make kernel exit: $SUF"

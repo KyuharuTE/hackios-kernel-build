@@ -43,6 +43,7 @@ jobs:
         run: |
           mkdir -p out
           cp -v upstream/built/* out/ 2>/dev/null || true
+          cp -v full-build.log out/ 2>/dev/null || true
           [ -s build.log ] && cp build.log out/ || true
           ls -l out
 
