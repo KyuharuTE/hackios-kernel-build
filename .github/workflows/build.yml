@@ -50,6 +50,19 @@ jobs:
             -framework CoreFoundation -framework IOKit -lobjc \
             -o ../out/libredwood.dylib userland/src/inject.c && ls -l ../out/libredwood.dylib
 
+      - name: Build libredwood-gl.dylib (Apple GPU names)
+        run: |
+          cd upstream
+          python3 ../patches/fake-renderer.py .
+          export THEOS=$HOME/theos
+          export PATH="$PWD/xnu-deps/host/bin:$PATH"
+          DYN="xnu-clang -arch arm64 -isysroot $THEOS/sdks/iPhoneOS16.5.sdk -O1"
+          mkdir -p ../out
+          $DYN -dynamiclib -install_name /redwood/lib/libredwood-gl.dylib \
+            -framework CoreFoundation -framework IOKit -framework IOSurface -lobjc \
+            ../libs/libOSMesa.8.dylib -o ../out/libredwood-gl.dylib \
+            userland/src/eagl.c userland/src/gl_osmesa.c && ls -l ../out/libredwood-gl.dylib
+
       - name: Collect artifacts
         if: always()
         run: |
